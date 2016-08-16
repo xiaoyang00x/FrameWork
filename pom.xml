@@ -32,11 +32,6 @@
 			<artifactId>jyaml</artifactId>
 			<version>1.3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.lendingtreasure</groupId>
-			<artifactId>qrcode-java</artifactId>
-			<version>1.0.0</version>
-		</dependency>
 
 		<dependency>
 			<groupId>log4j</groupId>
