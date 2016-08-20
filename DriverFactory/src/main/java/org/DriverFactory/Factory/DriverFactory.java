@@ -11,8 +11,8 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import BasicTool.Config.ConfigUtil;
-import Factory.LogFactory;
+import basicTool.config.ConfigUtil;
+import factory.LogFactory;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
