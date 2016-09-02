@@ -11,6 +11,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 import basicTool.StringUtilsTool;
 import basicTool.config.ConfigUtil;
@@ -28,132 +29,65 @@ public class DriverFactory {
 
     private DriverFactory() {
     }
-    
+
     /**
-     * create method to get OS type and auto choose the chrome driver for it
+     * create method to get OS type and auto choose the driver for it
+     * 
      * @return
      */
-    private static boolean isMacOS(){
+    private static boolean isMacOS() {
         return osType.indexOf("mac") >= 0;
     }
-    private static boolean isWindows(){
+
+    private static boolean isWindows() {
         return osType.indexOf("window") >= 0;
-    }
-    
-    public static void switchChromeDriverPath(){
-        if(isMacOS())
-        {
-            System.setProperty("webdriver.chrome.driver",
-                    System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
-        }
-        else if(isWindows())
-        {
-            System.setProperty("webdriver.chrome.driver",
-                    System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
-        }
-        else {
-            System.out.println("Current OS is："+osType+", and Not driver to support now !");
-            return;
-        }
-        
     }
 
     /**
      * Create a new driver for FF,CHROME,IE
      * 
      * @return WebDriver that you want style
+     * @throws Exception
      */
-    private static WebDriver CreateBroswerDriver() {
+    private static WebDriver CreateBroswerDriver() throws Exception {
         if (configUtil.getConfigFileContent("isRemoteDriver").equals("false")) {
             switch (configUtil.getConfigFileContent("broswerType")) {
             case "firefox":
-                driver = new FirefoxDriver();
-                return driver;
+                return new FirefoxDriver(switchLocalDriverPath());
             case "chrome":
-//                System.setProperty("webdriver.chrome.driver",
-//                        System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
-                switchChromeDriverPath();
-                DesiredCapabilities dc = DesiredCapabilities.chrome();
-                driver = new ChromeDriver(dc);
-                return driver;
+                return new ChromeDriver(switchLocalDriverPath());
             case "ie":
-                System.setProperty("webdriver.ie.driver",
-                        System.getProperty("user.dir") + configUtil.getConfigFileContent("internetExplorerDriverPath"));
-                dc = DesiredCapabilities.internetExplorer();
-                driver = new InternetExplorerDriver(dc);
-                return driver;
+                return new InternetExplorerDriver(switchLocalDriverPath());
             case "safari":
-                return driver;
+                return new SafariDriver(switchLocalDriverPath());
             default:
-                try {
-                    throw new Exception("Don't support this broswer on local!!!!!");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return driver;
-                }
+                return driver;
             }
         } else {
-            try {
-                URL remoteUrl = new URL(configUtil.getConfigFileContent("remoteDriverURL"));
-                switch (configUtil.getConfigFileContent("broswerType")) {
-                case "firefox":
-                    DesiredCapabilities dc = DesiredCapabilities.firefox();
-                    driver = new RemoteWebDriver(remoteUrl, dc);
-                    return driver;
-                case "chrome":
-//                    System.setProperty("webdriver.chrome.driver",
-//                            System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
-                    switchChromeDriverPath();
-                    dc = DesiredCapabilities.chrome();
-                    driver = new RemoteWebDriver(remoteUrl, dc);
-                    return driver;
-                case "ie":
-                    System.setProperty("webdriver.ie.driver", System.getProperty("user.dir")
-                            + configUtil.getConfigFileContent("internetExplorerDriverPath"));
-                    dc = DesiredCapabilities.internetExplorer();
-                    driver = new RemoteWebDriver(remoteUrl, dc);
-                    return driver;
-                case "safari":
-                    dc = DesiredCapabilities.safari();
-                    driver = new RemoteWebDriver(remoteUrl, dc);
-                    return driver;
-                default:
-                    return driver;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            URL remoteUrl = new URL(configUtil.getConfigFileContent("remoteDriverURL"));
+            switch (configUtil.getConfigFileContent("broswerType")) {
+            case "firefox":
+                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+            case "chrome":
+                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+            case "ie":
+                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+            case "safari":
+                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+            default:
                 return driver;
             }
         }
 
     }
-    
-    public static WebDriver createNewDriver() {
+
+    public static WebDriver createNewDriver() throws Exception {
         log.info("Current Driver is null : " + (driver == null));
         if (driver == null) {
             synchronized (WebDriver.class) {
                 if (driver == null) {
                     driver = CreateBroswerDriver();
-                    
-                    if(StringUtilsTool.isNotEmpty(ConfigUtil.getConfigUtil().getConfigFileContent("resolution")) && (ConfigUtil.getConfigUtil().getConfigFileContent("broswerType")).indexOf("chrome")>=0 )
-                    {
-                        try {
-                            String windowResolution = ConfigUtil.getConfigUtil().getConfigFileContent("resolution");
-                            String resolution[] = windowResolution.split("\\*");
-                            driver.manage().window().setSize(new Dimension(Integer.parseInt(resolution[0]), Integer.parseInt(resolution[1])));
-                        } catch (NumberFormatException e) {
-                            // TODO: handle exception
-                            e.printStackTrace();
-                        }
-                    }
-                    else 
-                    {
-                        driver.manage().window().maximize();
-                    }
-                       
-                    
-                    
-                    driver.get(configUtil.getConfigFileContent("defaultURL"));
+                    setUpDriverSize(driver).get(configUtil.getConfigFileContent("defaultURL"));
                     return driver;
                 }
             }
@@ -161,7 +95,7 @@ public class DriverFactory {
         return driver;
     }
 
-    public static WebDriver getCurrentDriver() {
+    public static WebDriver getCurrentDriver() throws Exception {
         return createNewDriver();
     }
 
@@ -199,6 +133,61 @@ public class DriverFactory {
             }
         }
         return appiumDriver;
+    }
+
+    public static DesiredCapabilities switchLocalDriverPath() throws Exception {
+        DesiredCapabilities dc;
+        if (isMacOS()) {
+            switch (configUtil.getConfigFileContent("broswerType")) {
+            case "firefox":
+                dc = DesiredCapabilities.firefox();
+                return dc;
+            case "chrome":
+                System.setProperty("webdriver.chrome.driver",
+                        System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
+                dc = DesiredCapabilities.chrome();
+                return dc;
+            case "safari":
+                dc = DesiredCapabilities.safari();
+                return dc;
+            default:
+                throw new Exception("Don't support this broswer on local!!!!!");
+            }
+        } else if (isWindows()) {
+            switch (configUtil.getConfigFileContent("broswerType")) {
+            case "firefox":
+                dc = DesiredCapabilities.firefox();
+                return dc;
+            case "chrome":
+                System.setProperty("webdriver.chrome.driver",
+                        System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+                dc = DesiredCapabilities.chrome();
+                return dc;
+            case "ie":
+                System.setProperty("webdriver.ie.driver",
+                        System.getProperty("user.dir") + configUtil.getConfigFileContent("internetExplorerDriverPath"));
+                dc = DesiredCapabilities.internetExplorer();
+                return dc;
+            default:
+                throw new Exception("Don't support this broswer on local!!!!!");
+            }
+        } else
+            throw new Exception("Current OS is：" + osType + ", and Not driver to support now !");
+
+    }
+
+    public static WebDriver setUpDriverSize(WebDriver driver) {
+        if (StringUtilsTool.isNotEmpty(ConfigUtil.getConfigUtil().getConfigFileContent("resolution"))
+                && !ConfigUtil.getConfigUtil().getConfigFileContent("resolution").equals("MaxSize")) {
+            String windowResolution = ConfigUtil.getConfigUtil().getConfigFileContent("resolution");
+            String resolution[] = windowResolution.split("\\*");
+            driver.manage().window()
+                    .setSize(new Dimension(Integer.parseInt(resolution[0]), Integer.parseInt(resolution[1])));
+            driver.manage().window().maximize();
+        } else {
+            driver.manage().window().maximize();
+        }
+        return driver;
     }
 
     /**
