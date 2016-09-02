@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -11,6 +12,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import basicTool.StringUtilsTool;
 import basicTool.config.ConfigUtil;
 import factory.LogFactory;
 import io.appium.java_client.AppiumDriver;
@@ -22,8 +24,38 @@ public class DriverFactory {
     private static AppiumDriver appiumDriver = null;
     private static Logger log = LogFactory.getLogger(DriverFactory.class);
     private static ConfigUtil configUtil = ConfigUtil.getConfigUtil();
+    private static String osType = System.getProperty("os.name").toLowerCase();
 
     private DriverFactory() {
+    }
+    
+    /**
+     * create method to get OS type and auto choose the chrome driver for it
+     * @return
+     */
+    private static boolean isMacOS(){
+        return osType.indexOf("mac") >= 0;
+    }
+    private static boolean isWindows(){
+        return osType.indexOf("window") >= 0;
+    }
+    
+    public static void switchChromeDriverPath(){
+        if(isMacOS())
+        {
+            System.setProperty("webdriver.chrome.driver",
+                    System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
+        }
+        else if(isWindows())
+        {
+            System.setProperty("webdriver.chrome.driver",
+                    System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+        }
+        else {
+            System.out.println("Current OS is："+osType+", and Not driver to support now !");
+            return;
+        }
+        
     }
 
     /**
@@ -38,8 +70,9 @@ public class DriverFactory {
                 driver = new FirefoxDriver();
                 return driver;
             case "chrome":
-                System.setProperty("webdriver.chrome.driver",
-                        System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+//                System.setProperty("webdriver.chrome.driver",
+//                        System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+                switchChromeDriverPath();
                 DesiredCapabilities dc = DesiredCapabilities.chrome();
                 driver = new ChromeDriver(dc);
                 return driver;
@@ -68,8 +101,9 @@ public class DriverFactory {
                     driver = new RemoteWebDriver(remoteUrl, dc);
                     return driver;
                 case "chrome":
-                    System.setProperty("webdriver.chrome.driver",
-                            System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+//                    System.setProperty("webdriver.chrome.driver",
+//                            System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+                    switchChromeDriverPath();
                     dc = DesiredCapabilities.chrome();
                     driver = new RemoteWebDriver(remoteUrl, dc);
                     return driver;
@@ -93,14 +127,32 @@ public class DriverFactory {
         }
 
     }
-
+    
     public static WebDriver createNewDriver() {
         log.info("Current Driver is null : " + (driver == null));
         if (driver == null) {
             synchronized (WebDriver.class) {
                 if (driver == null) {
                     driver = CreateBroswerDriver();
-                    driver.manage().window().maximize();
+                    
+                    if(StringUtilsTool.isNotEmpty(ConfigUtil.getConfigUtil().getConfigFileContent("resolution")) && (ConfigUtil.getConfigUtil().getConfigFileContent("broswerType")).indexOf("chrome")>=0 )
+                    {
+                        try {
+                            String windowResolution = ConfigUtil.getConfigUtil().getConfigFileContent("resolution");
+                            String resolution[] = windowResolution.split("\\*");
+                            driver.manage().window().setSize(new Dimension(Integer.parseInt(resolution[0]), Integer.parseInt(resolution[1])));
+                        } catch (NumberFormatException e) {
+                            // TODO: handle exception
+                            e.printStackTrace();
+                        }
+                    }
+                    else 
+                    {
+                        driver.manage().window().maximize();
+                    }
+                       
+                    
+                    
                     driver.get(configUtil.getConfigFileContent("defaultURL"));
                     return driver;
                 }
