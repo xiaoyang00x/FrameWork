@@ -120,11 +120,12 @@ public class DriverFactory {
                             ConfigUtil.getConfigUtil().getConfigFileContent("deviceName"));
                     capabilities.setCapability("app",
                             ConfigUtil.getConfigUtil().getConfigFileContent("applactionLocation"));
-                    if (ConfigUtil.getConfigUtil().getConfigFileContent("phonePlatform").equals("iOS"))
+                    if (ConfigUtil.getConfigUtil().getConfigFileContent("phonePlatform").equals("iOS")) {
+                        capabilities.setCapability("autoAcceptAlerts", true);
                         appiumDriver = new IOSDriver(
                                 new URL(ConfigUtil.getConfigUtil().getConfigFileContent("appiumDriverURL")),
                                 capabilities);
-                    else
+                    } else
                         appiumDriver = new AndroidDriver(
                                 new URL(ConfigUtil.getConfigUtil().getConfigFileContent("appiumDriverURL")),
                                 capabilities);
