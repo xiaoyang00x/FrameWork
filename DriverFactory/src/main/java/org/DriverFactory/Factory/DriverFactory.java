@@ -3,6 +3,9 @@ package org.DriverFactory.Factory;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.ConfigUtil.ConfigUtil;
+import org.LogFactory.LogFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -13,9 +16,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
-import basicTool.StringUtilsTool;
-import basicTool.config.ConfigUtil;
-import factory.LogFactory;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -178,7 +178,7 @@ public class DriverFactory {
     }
 
     public static WebDriver setUpDriverSize(WebDriver driver) {
-        if (StringUtilsTool.isNotEmpty(ConfigUtil.getConfigUtil().getConfigFileContent("resolution"))
+        if (StringUtils.isNotEmpty(ConfigUtil.getConfigUtil().getConfigFileContent("resolution"))
                 && !ConfigUtil.getConfigUtil().getConfigFileContent("resolution").equals("MaxSize")) {
             String windowResolution = ConfigUtil.getConfigUtil().getConfigFileContent("resolution");
             String resolution[] = windowResolution.split("\\*");
