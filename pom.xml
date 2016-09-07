@@ -107,7 +107,7 @@
 		<repository>
 			<id>JDB</id>
 			<name>H5AutomationNexus</name>
-			<url>http://localhost:8081/nexus/content/repositories/JDB</url>
+			<url>http://100.66.169.134:8081/nexus/content/repositories/JDB</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -119,7 +119,7 @@
 		<repository>
 			<id>JDBSnapshot</id>
 			<name>H5AutomationNexusSnapshot</name>
-			<url>http://localhost:8081/nexus/content/repositories/JDBSnapshot</url>
+			<url>http://100.66.169.134:8081/nexus/content/repositories/JDBSnapshot</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -134,13 +134,13 @@
 		<repository>
 			<id>JDB</id>
 			<name>H5AutomationNexus</name>
-			<url>http://localhost:8081/nexus/content/repositories/JDB</url>
+			<url>http://100.66.169.134:8081/nexus/content/repositories/JDB</url>
 		</repository>
 
 		<snapshotRepository>
 			<id>JDBSnapshot</id>
 			<name>H5AutomationNexusSnapshot</name>
-			<url>http://localhost:8081/nexus/content/repositories/JDBSnapshot</url>
+			<url>http://100.66.169.134:8081/nexus/content/repositories/JDBSnapshot</url>
 		</snapshotRepository>
 
 	</distributionManagement>
