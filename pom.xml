@@ -8,7 +8,6 @@
 	<name>CommonFrameWork</name>
 	<description>common project</description>
 
-
 	<modules>
 		<module>DriverFactory</module>
 		<module>ConfigUtil</module>
@@ -22,9 +21,6 @@
 			<artifactId>selenium-java</artifactId>
 			<version>2.53.0</version>
 		</dependency>
-
-
-
 
 		<dependency>
 			<groupId>org.jyaml</groupId>
@@ -107,7 +103,7 @@
 		<repository>
 			<id>JDB</id>
 			<name>H5AutomationNexus</name>
-			<url>http://100.66.169.134:8081/nexus/content/repositories/JDB</url>
+			<url>http://localhost:8081/nexus/content/repositories/JDB</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -119,7 +115,7 @@
 		<repository>
 			<id>JDBSnapshot</id>
 			<name>H5AutomationNexusSnapshot</name>
-			<url>http://100.66.169.134:8081/nexus/content/repositories/JDBSnapshot</url>
+			<url>http://localhost:8081/nexus/content/repositories/JDBSnapshot</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -134,19 +130,30 @@
 		<repository>
 			<id>JDB</id>
 			<name>H5AutomationNexus</name>
-			<url>http://100.66.169.134:8081/nexus/content/repositories/JDB</url>
+			<url>http://localhost:8081/nexus/content/repositories/JDB</url>
 		</repository>
 
 		<snapshotRepository>
 			<id>JDBSnapshot</id>
 			<name>H5AutomationNexusSnapshot</name>
-			<url>http://100.66.169.134:8081/nexus/content/repositories/JDBSnapshot</url>
+			<url>http://localhost:8081/nexus/content/repositories/JDBSnapshot</url>
 		</snapshotRepository>
 
 	</distributionManagement>
 
 
-
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 
 </project>
