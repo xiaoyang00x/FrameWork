@@ -24,6 +24,7 @@ public enum TESTCONFIG {
     PAYMENTURL("paymentURL"),
     RESOLUTION("resolution"),
     CHROMEDRIVERMAC("chromeDriverPathMac"),
+    CHROMEIGNORECERTIFICATEERRORS("chromeIgnoreCertificateErrors"),
     // ******Phone*******
     SWIPETIMES("swipeTimes"),
     DEVICENAME("deviceName"),
