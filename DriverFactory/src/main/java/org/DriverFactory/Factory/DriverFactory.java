@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -55,7 +56,20 @@ public class DriverFactory {
             case "firefox":
                 return new FirefoxDriver(switchLocalDriverPath());
             case "chrome":
-                return new ChromeDriver(switchLocalDriverPath());
+                if (configUtil.getConfigFileContent("chromeIgnoreCertificateErrors").equals("false")) {
+                    return new ChromeDriver(switchLocalDriverPath());
+                } else {
+                    if (isMacOS()) {
+                        System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")
+                                + configUtil.getConfigFileContent("chromeDriverPathMac"));
+                    } else {
+                        System.setProperty("webdriver.chrome.driver",
+                                System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+                    }
+                    ChromeOptions options = new ChromeOptions();
+                    options.addArguments("--test-type", "--ignore-certificate-errors");
+                    return new ChromeDriver(options);
+                }
             case "ie":
                 return new InternetExplorerDriver(switchLocalDriverPath());
             case "safari":
