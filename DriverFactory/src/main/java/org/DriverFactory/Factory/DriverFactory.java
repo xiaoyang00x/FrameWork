@@ -56,20 +56,7 @@ public class DriverFactory {
             case "firefox":
                 return new FirefoxDriver(switchLocalDriverPath());
             case "chrome":
-                if (configUtil.getConfigFileContent("chromeIgnoreCertificateErrors").equals("false")) {
-                    return new ChromeDriver(switchLocalDriverPath());
-                } else {
-                    if (isMacOS()) {
-                        System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")
-                                + configUtil.getConfigFileContent("chromeDriverPathMac"));
-                    } else {
-                        System.setProperty("webdriver.chrome.driver",
-                                System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
-                    }
-                    ChromeOptions options = new ChromeOptions();
-                    options.addArguments("--test-type", "--ignore-certificate-errors");
-                    return new ChromeDriver(options);
-                }
+                return new ChromeDriver(switchLocalDriverPath());
             case "ie":
                 return new InternetExplorerDriver(switchLocalDriverPath());
             case "safari":
@@ -176,7 +163,12 @@ public class DriverFactory {
             case "chrome":
                 System.setProperty("webdriver.chrome.driver",
                         System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("test-type");
+                options.addArguments("disable-popup-blocking");
+                options.addArguments("--test-type", "--ignore-certificate-errors");
                 dc = DesiredCapabilities.chrome();
+                dc.setCapability(ChromeOptions.CAPABILITY, options);
                 return dc;
             case "ie":
                 System.setProperty("webdriver.ie.driver",
