@@ -30,7 +30,8 @@ public enum TESTCONFIG {
     DEVICENAME("deviceName"),
     APPLACTIONLOCATION("applactionLocation"),
     APPIUMDRIVERURL("appiumDriverURL"),
-    PHONEPLATFORM("phonePlatform");
+    PHONEPLATFORM("phonePlatform"),
+    PLATFORMVERSION("platformVersion");
 
     String value;
 
