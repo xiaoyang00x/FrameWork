@@ -22,198 +22,201 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
 public class DriverFactory {
-    private static WebDriver driver = null;
-    private static AppiumDriver appiumDriver = null;
-    private static Logger log = LogFactory.getLogger(DriverFactory.class);
-    private static ConfigUtil configUtil = ConfigUtil.getConfigUtil();
-    private static String osType = System.getProperty("os.name").toLowerCase();
+	private static WebDriver driver = null;
+	private static AppiumDriver appiumDriver = null;
+	private static Logger log = LogFactory.getLogger(DriverFactory.class);
+	private static ConfigUtil configUtil = ConfigUtil.getConfigUtil();
+	private static String osType = System.getProperty("os.name").toLowerCase();
 
-    private DriverFactory() {
-    }
+	private DriverFactory() {
+	}
 
-    /**
-     * create method to get OS type and auto choose the driver for it
-     * 
-     * @return
-     */
-    private static boolean isMacOS() {
-        return osType.indexOf("mac") >= 0;
-    }
+	/**
+	 * create method to get OS type and auto choose the driver for it
+	 * 
+	 * @return
+	 */
+	private static boolean isMacOS() {
+		return osType.indexOf("mac") >= 0;
+	}
 
-    private static boolean isWindows() {
-        return osType.indexOf("window") >= 0;
-    }
+	private static boolean isWindows() {
+		return osType.indexOf("window") >= 0;
+	}
 
-    /**
-     * Create a new driver for FF,CHROME,IE
-     * 
-     * @return WebDriver that you want style
-     * @throws Exception
-     */
-    private static WebDriver CreateBroswerDriver() throws Exception {
-        if (configUtil.getConfigFileContent("isRemoteDriver").equals("false")) {
-            switch (configUtil.getConfigFileContent("broswerType")) {
-            case "firefox":
-                return new FirefoxDriver(switchLocalDriverPath());
-            case "chrome":
-                return new ChromeDriver(switchLocalDriverPath());
-            case "ie":
-                return new InternetExplorerDriver(switchLocalDriverPath());
-            case "safari":
-                return new SafariDriver(switchLocalDriverPath());
-            default:
-                return driver;
-            }
-        } else {
-            URL remoteUrl = new URL(configUtil.getConfigFileContent("remoteDriverURL"));
-            switch (configUtil.getConfigFileContent("broswerType")) {
-            case "firefox":
-                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
-            case "chrome":
-                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
-            case "ie":
-                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
-            case "safari":
-                return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
-            default:
-                return driver;
-            }
-        }
+	/**
+	 * Create a new driver for FF,CHROME,IE
+	 * 
+	 * @return WebDriver that you want style
+	 * @throws Exception
+	 */
+	private static WebDriver CreateBroswerDriver() throws Exception {
+		if (configUtil.getConfigFileContent("isRemoteDriver").equals("false")) {
+			switch (configUtil.getConfigFileContent("broswerType")) {
+			case "firefox":
+				return new FirefoxDriver(switchLocalDriverPath());
+			case "chrome":
+				return new ChromeDriver(switchLocalDriverPath());
+			case "ie":
+				return new InternetExplorerDriver(switchLocalDriverPath());
+			case "safari":
+				return new SafariDriver(switchLocalDriverPath());
+			default:
+				return driver;
+			}
+		} else {
+			URL remoteUrl = new URL(configUtil.getConfigFileContent("remoteDriverURL"));
+			switch (configUtil.getConfigFileContent("broswerType")) {
+			case "firefox":
+				return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+			case "chrome":
+				return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+			case "ie":
+				return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+			case "safari":
+				return new RemoteWebDriver(remoteUrl, switchLocalDriverPath());
+			default:
+				return driver;
+			}
+		}
 
-    }
+	}
 
-    public static WebDriver createNewDriver() throws Exception {
-        log.info("Current Driver is null : " + (driver == null));
-        if (driver == null) {
-            synchronized (WebDriver.class) {
-                if (driver == null) {
-                    driver = CreateBroswerDriver();
-                    setUpDriverSize(driver).get(configUtil.getConfigFileContent("defaultURL"));
-                    return driver;
-                }
-            }
-        }
-        return driver;
-    }
+	public static WebDriver createNewDriver() throws Exception {
+		log.info("Current Driver is null : " + (driver == null));
+		if (driver == null) {
+			synchronized (WebDriver.class) {
+				if (driver == null) {
+					driver = CreateBroswerDriver();
+					setUpDriverSize(driver).get(configUtil.getConfigFileContent("defaultURL"));
+					return driver;
+				}
+			}
+		}
+		return driver;
+	}
 
-    public static WebDriver getCurrentDriver() throws Exception {
-        return createNewDriver();
-    }
+	public static WebDriver getCurrentDriver() throws Exception {
+		return createNewDriver();
+	}
 
-    /**
-     * Create a new Appium driver for iOS,Android
-     * 
-     * 
-     * @return Appium drive that you want style
-     */
+	/**
+	 * Create a new Appium driver for iOS,Android
+	 * 
+	 * 
+	 * @return Appium drive that you want style
+	 */
 
-    public static AppiumDriver createAppiumDriver() throws MalformedURLException {
-        log.info("Current Driver is null : " + (appiumDriver == null));
-        if (appiumDriver == null) {
-            synchronized (WebDriver.class) {
-                if (appiumDriver == null) {
-                    DesiredCapabilities capabilities = new DesiredCapabilities();
-                    capabilities.setCapability("platformName",
-                            ConfigUtil.getConfigUtil().getConfigFileContent("phonePlatform"));
-                    capabilities.setCapability("platformVersion",
-                            ConfigUtil.getConfigUtil().getConfigFileContent("platformVersion"));
-                    capabilities.setCapability("deviceName",
-                            ConfigUtil.getConfigUtil().getConfigFileContent("deviceName"));
-                    capabilities.setCapability("app",
-                            ConfigUtil.getConfigUtil().getConfigFileContent("applactionLocation"));
-                    if (ConfigUtil.getConfigUtil().getConfigFileContent("phonePlatform").equals("iOS")) {
-                        capabilities.setCapability("autoAcceptAlerts", true);
-                        appiumDriver = new IOSDriver(
-                                new URL(ConfigUtil.getConfigUtil().getConfigFileContent("appiumDriverURL")),
-                                capabilities);
-                    } else
-                        appiumDriver = new AndroidDriver(
-                                new URL(ConfigUtil.getConfigUtil().getConfigFileContent("appiumDriverURL")),
-                                capabilities);
-                    return appiumDriver;
-                }
-            }
-        }
-        return appiumDriver;
-    }
+	public static AppiumDriver createAppiumDriver() throws MalformedURLException {
+		log.info("Current Driver is null : " + (appiumDriver == null));
+		if (appiumDriver == null) {
+			synchronized (WebDriver.class) {
+				if (appiumDriver == null) {
+					DesiredCapabilities capabilities = new DesiredCapabilities();
+					capabilities.setCapability("platformName",
+							ConfigUtil.getConfigUtil().getConfigFileContent("phonePlatform"));
+					capabilities.setCapability("platformVersion",
+							ConfigUtil.getConfigUtil().getConfigFileContent("platformVersion"));
+					capabilities.setCapability("deviceName",
+							ConfigUtil.getConfigUtil().getConfigFileContent("deviceName"));
+					capabilities.setCapability("app",
+							ConfigUtil.getConfigUtil().getConfigFileContent("applactionLocation"));
+					if (ConfigUtil.getConfigUtil().getConfigFileContent("phonePlatform").equals("iOS")) {
+						capabilities.setCapability("autoAcceptAlerts", true);
+						appiumDriver = new IOSDriver(
+								new URL(ConfigUtil.getConfigUtil().getConfigFileContent("appiumDriverURL")),
+								capabilities);
+					} else
+						appiumDriver = new AndroidDriver(
+								new URL(ConfigUtil.getConfigUtil().getConfigFileContent("appiumDriverURL")),
+								capabilities);
+					return appiumDriver;
+				}
+			}
+		}
+		return appiumDriver;
+	}
 
-    public static DesiredCapabilities switchLocalDriverPath() throws Exception {
-        DesiredCapabilities dc;
-        if (isMacOS()) {
-            switch (configUtil.getConfigFileContent("broswerType")) {
-            case "firefox":
-                dc = DesiredCapabilities.firefox();
-                return dc;
-            case "chrome":
-                System.setProperty("webdriver.chrome.driver",
-                        System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
-                dc = DesiredCapabilities.chrome();
-                return dc;
-            case "safari":
-                dc = DesiredCapabilities.safari();
-                return dc;
-            default:
-                throw new Exception("Don't support this broswer on local!!!!!");
-            }
-        } else if (isWindows()) {
-            switch (configUtil.getConfigFileContent("broswerType")) {
-            case "firefox":
-                dc = DesiredCapabilities.firefox();
-                return dc;
-            case "chrome":
-                System.setProperty("webdriver.chrome.driver",
-                        System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
-                ChromeOptions options = new ChromeOptions();
-                options.addArguments("test-type");
-                options.addArguments("disable-popup-blocking");
-                options.addArguments("--test-type", "--ignore-certificate-errors");
-                dc = DesiredCapabilities.chrome();
-                dc.setCapability(ChromeOptions.CAPABILITY, options);
-                return dc;
-            case "ie":
-                System.setProperty("webdriver.ie.driver",
-                        System.getProperty("user.dir") + configUtil.getConfigFileContent("internetExplorerDriverPath"));
-                dc = DesiredCapabilities.internetExplorer();
-                return dc;
-            default:
-                throw new Exception("Don't support this broswer on local!!!!!");
-            }
-        } else
-            throw new Exception("Current OS is：" + osType + ", and Not driver to support now !");
+	public static DesiredCapabilities switchLocalDriverPath() throws Exception {
+		DesiredCapabilities dc;
+		if (isMacOS()) {
+			switch (configUtil.getConfigFileContent("broswerType")) {
+			case "firefox":
+				System.setProperty("webdriver.gecko.driver",
+						System.getProperty("user.dir") + configUtil.getConfigFileContent("firefoxDriverPathMac"));
+				dc = DesiredCapabilities.firefox();
+				return dc;
+			case "chrome":
+				System.setProperty("webdriver.chrome.driver",
+						System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
+				dc = DesiredCapabilities.chrome();
+				System.out.println(System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
+				return dc;
+			case "safari":
+				dc = DesiredCapabilities.safari();
+				return dc;
+			default:
+				throw new Exception("Don't support this broswer on local!!!!!");
+			}
+		} else if (isWindows()) {
+			switch (configUtil.getConfigFileContent("broswerType")) {
+			case "firefox":
+				dc = DesiredCapabilities.firefox();
+				return dc;
+			case "chrome":
+				System.setProperty("webdriver.chrome.driver",
+						System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPath"));
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("test-type");
+				options.addArguments("disable-popup-blocking");
+				options.addArguments("--test-type", "--ignore-certificate-errors");
+				dc = DesiredCapabilities.chrome();
+				dc.setCapability(ChromeOptions.CAPABILITY, options);
+				return dc;
+			case "ie":
+				System.setProperty("webdriver.ie.driver",
+						System.getProperty("user.dir") + configUtil.getConfigFileContent("internetExplorerDriverPath"));
+				dc = DesiredCapabilities.internetExplorer();
+				return dc;
+			default:
+				throw new Exception("Don't support this broswer on local!!!!!");
+			}
+		} else
+			throw new Exception("Current OS is：" + osType + ", and Not driver to support now !");
 
-    }
+	}
 
-    public static WebDriver setUpDriverSize(WebDriver driver) {
-        if (StringUtils.isNotEmpty(ConfigUtil.getConfigUtil().getConfigFileContent("resolution"))
-                && !ConfigUtil.getConfigUtil().getConfigFileContent("resolution").equals("MaxSize")) {
-            String windowResolution = ConfigUtil.getConfigUtil().getConfigFileContent("resolution");
-            String resolution[] = windowResolution.split("\\*");
-            driver.manage().window()
-                    .setSize(new Dimension(Integer.parseInt(resolution[0]), Integer.parseInt(resolution[1])));
-            driver.manage().window().maximize();
-        } else {
-            driver.manage().window().maximize();
-        }
-        return driver;
-    }
+	public static WebDriver setUpDriverSize(WebDriver driver) {
+		if (StringUtils.isNotEmpty(ConfigUtil.getConfigUtil().getConfigFileContent("resolution"))
+				&& !ConfigUtil.getConfigUtil().getConfigFileContent("resolution").equals("MaxSize")) {
+			String windowResolution = ConfigUtil.getConfigUtil().getConfigFileContent("resolution");
+			String resolution[] = windowResolution.split("\\*");
+			driver.manage().window()
+					.setSize(new Dimension(Integer.parseInt(resolution[0]), Integer.parseInt(resolution[1])));
+			driver.manage().window().maximize();
+		} else {
+			driver.manage().window().maximize();
+		}
+		return driver;
+	}
 
-    /**
-     * Close broswer driver
-     */
-    public static void CloseDriver() {
+	/**
+	 * Close broswer driver
+	 */
+	public static void CloseDriver() {
 
-        driver.quit();
-        driver = null;
-    }
+		driver.quit();
+		driver = null;
+	}
 
-    /**
-     * Close appium driver
-     */
-    public static void closeAppiumDriver() {
+	/**
+	 * Close appium driver
+	 */
+	public static void closeAppiumDriver() {
 
-        appiumDriver.quit();
-        appiumDriver = null;
+		appiumDriver.quit();
+		appiumDriver = null;
 
-    }
+	}
 
 }
