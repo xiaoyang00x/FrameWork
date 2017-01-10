@@ -150,7 +150,6 @@ public class DriverFactory {
 				System.setProperty("webdriver.chrome.driver",
 						System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
 				dc = DesiredCapabilities.chrome();
-				System.out.println(System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
 				return dc;
 			case "safari":
 				dc = DesiredCapabilities.safari();
