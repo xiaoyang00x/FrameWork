@@ -13,6 +13,7 @@ public enum TESTCONFIG {
     // Common
     DEVICETYPE("deviceType"),
     TESTNAME("testName"),
+    ISVIDEO("isVideo"),
     CONVERVIDEOTOOLMAC("convertVideoToolMac"),
     // ******PC******
     ISROMOTEFRIVER("isRemoteDriver"),

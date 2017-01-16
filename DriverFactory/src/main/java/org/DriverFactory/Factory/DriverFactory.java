@@ -143,12 +143,12 @@ public class DriverFactory {
 			switch (configUtil.getConfigFileContent("broswerType")) {
 			case "firefox":
 				System.setProperty("webdriver.gecko.driver",
-						System.getProperty("user.dir") + configUtil.getConfigFileContent("firefoxDriverPathMac"));
+						System.getProperty("user.dir") + configUtil.getConfigFileContent("firefoxDriverPathMac").trim());
 				dc = DesiredCapabilities.firefox();
 				return dc;
 			case "chrome":
 				System.setProperty("webdriver.chrome.driver",
-						System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac"));
+						System.getProperty("user.dir") + configUtil.getConfigFileContent("chromeDriverPathMac").trim());
 				dc = DesiredCapabilities.chrome();
 				return dc;
 			case "safari":
