@@ -16,12 +16,14 @@ import org.monte.screenrecorder.ScreenRecorder;
 public class SpecializedScreenRecorder extends ScreenRecorder {
 
     private String name;
+    private String methodName;
 
     public SpecializedScreenRecorder(GraphicsConfiguration cfg, Rectangle captureArea, Format fileFormat,
-            Format screenFormat, Format mouseFormat, Format audioFormat, File movieFolder, String name)
-                    throws IOException, AWTException {
+            Format screenFormat, Format mouseFormat, Format audioFormat, File movieFolder, String name,
+            String methodName) throws IOException, AWTException {
         super(cfg, captureArea, fileFormat, screenFormat, mouseFormat, audioFormat, movieFolder);
         this.name = name;
+        this.methodName = methodName;
     }
 
     @Override
@@ -42,7 +44,11 @@ public class SpecializedScreenRecorder extends ScreenRecorder {
             videoReord.setCurrentAVIVideoPath(System.getProperty("user.dir") + "/target/surefire-reports/video/"
                     + dateFormat.format(new Date()) + "." + Registry.getInstance().getExtension(fileFormat));
         videoReord.setCurrentWEBMVideoPath(videoReord.getCurrentAVIVideoPath().replace(".avi", ".webm"));
-        VideoReord.initVideoPath(videoReord.getCurrentWEBMVideoPath());
+        
+        VideoReord.initVideoPath(methodName, videoReord.getCurrentWEBMVideoPath());
+        
+        System.out.println(" VideoReord.getVideoPath() is : -----------" + VideoReord.getVideoPath());
+        
         return new File(movieFolder, videoReord.getCurrentAVIVideoPath());
     }
 

@@ -17,8 +17,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.monte.media.Format;
 import org.monte.media.FormatKeys.MediaType;
@@ -29,7 +30,7 @@ public class VideoReord {
 
     private static VideoReord instance = null;
 
-    private static List<String> videoPath = new ArrayList<String>();
+    private static Map<String,String> videoPath = new HashMap<>();
 
     private ScreenRecorder screenRecorder;
 
@@ -53,19 +54,19 @@ public class VideoReord {
         return instance;
     }
 
-    public static void initVideoPath(String path) {
-        getInstance().getVideoPath().add(path);
+    public static void initVideoPath(String methodName ,String path) {
+        getInstance().getVideoPath().put(methodName, path);
     }
 
-    public static List<String> getVideoPath() {
+    public static Map<String,String> getVideoPath() {
         return videoPath;
     }
 
-    public static void setVideoPath(List<String> videoPath) {
-        VideoReord.videoPath = videoPath;
-    }
+//    public static void setVideoPath(List<String> videoPath) {
+//        VideoReord.videoPath = videoPath;
+//    }
 
-    public void startRecording() throws Exception {
+    public void startRecording(String methodName) throws Exception {
         File file = new File("");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = screenSize.width;
@@ -81,7 +82,7 @@ public class VideoReord {
                         CompressorNameKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE, DepthKey, 24, FrameRateKey,
                         Rational.valueOf(15), QualityKey, 1.0f, KeyFrameIntervalKey, 15 * 60),
                 new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, "black", FrameRateKey, Rational.valueOf(30)),
-                null, file, "");
+                null, file, "",methodName);
         this.screenRecorder.start();
 
     }
