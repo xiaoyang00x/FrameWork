@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.ConfigUtil.ConfigUtil;
 import org.monte.media.Format;
 import org.monte.media.Registry;
 import org.monte.screenrecorder.ScreenRecorder;
@@ -34,8 +35,12 @@ public class SpecializedScreenRecorder extends ScreenRecorder {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         VideoReord videoReord = VideoReord.getInstance();
-        videoReord.setCurrentAVIVideoPath(System.getProperty("user.dir") + "/test-output/video/" + name + "-"
-                + dateFormat.format(new Date()) + "." + Registry.getInstance().getExtension(fileFormat));
+        if (ConfigUtil.getConfigUtil().getConfigFileContent("isVideo").equals("false"))
+            videoReord.setCurrentAVIVideoPath(System.getProperty("user.dir") + "/test-output/video/"
+                    + dateFormat.format(new Date()) + "." + Registry.getInstance().getExtension(fileFormat));
+        else
+            videoReord.setCurrentAVIVideoPath(System.getProperty("user.dir") + "/target/surefire-reports/video/"
+                    + dateFormat.format(new Date()) + "." + Registry.getInstance().getExtension(fileFormat));
         videoReord.setCurrentWEBMVideoPath(videoReord.getCurrentAVIVideoPath().replace(".avi", ".webm"));
         VideoReord.initVideoPath(videoReord.getCurrentWEBMVideoPath());
         return new File(movieFolder, videoReord.getCurrentAVIVideoPath());
