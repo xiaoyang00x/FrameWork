@@ -15,6 +15,9 @@ public enum TESTCONFIG {
     TESTNAME("testName"),
     ISVIDEO("isVideo"),
     CONVERVIDEOTOOLMAC("convertVideoToolMac"),
+    JENKINSIP("jenkinsIP"),
+    JENKINSPORT("JenkinsPort"),
+    ISLOCALVIDEO("isLocalVideo"),
     // ******PC******
     ISROMOTEFRIVER("isRemoteDriver"),
     REMOTEDRIVERURL("remoteDriverURL"),
