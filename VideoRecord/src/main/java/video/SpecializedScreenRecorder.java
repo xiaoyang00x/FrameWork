@@ -37,7 +37,7 @@ public class SpecializedScreenRecorder extends ScreenRecorder {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         VideoReord videoReord = VideoReord.getInstance();
-        if (ConfigUtil.getConfigUtil().getConfigFileContent("isVideo").equals("false"))
+        if (ConfigUtil.getConfigUtil().getConfigFileContent("isRemoteDriver").equals("false"))
             videoReord.setCurrentAVIVideoPath(System.getProperty("user.dir") + "/test-output/video/"
                     + dateFormat.format(new Date()) + "." + Registry.getInstance().getExtension(fileFormat));
         else

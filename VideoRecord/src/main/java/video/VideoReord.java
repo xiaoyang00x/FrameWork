@@ -18,7 +18,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.monte.media.Format;
@@ -30,7 +29,7 @@ public class VideoReord {
 
     private static VideoReord instance = null;
 
-    private static Map<String,String> videoPath = new HashMap<>();
+    private static Map<String, String> videoPath = new HashMap<>();
 
     private ScreenRecorder screenRecorder;
 
@@ -54,11 +53,11 @@ public class VideoReord {
         return instance;
     }
 
-    public static void initVideoPath(String methodName ,String path) {
+    public static void initVideoPath(String methodName, String path) {
         getInstance().getVideoPath().put(methodName, path);
     }
 
-    public static Map<String,String> getVideoPath() {
+    public static Map<String, String> getVideoPath() {
         return videoPath;
     }
 
@@ -78,7 +77,7 @@ public class VideoReord {
                         CompressorNameKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE, DepthKey, 24, FrameRateKey,
                         Rational.valueOf(15), QualityKey, 1.0f, KeyFrameIntervalKey, 15 * 60),
                 new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, "black", FrameRateKey, Rational.valueOf(30)),
-                null, file, "",methodName);
+                null, file, "", methodName);
         this.screenRecorder.start();
 
     }
