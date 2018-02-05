@@ -123,7 +123,7 @@
         <repository>
             <id>releases</id>
             <name>Releases</name>
-            <url>http://172.18.134.34:8081/nexus/content/repositories/releases</url>
+            <url>http://10.4.238.10:8081/nexus/content/repositories/releases</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -135,7 +135,7 @@
         <repository>
             <id>snapshots</id>
             <name>Snapshots</name>
-            <url>http://172.18.134.34:8081/nexus/content/repositories/snapshots</url>
+            <url>http://10.4.238.10:8081/nexus/content/repositories/snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -149,12 +149,12 @@
         <repository>
             <id>releases</id>
             <name>Releases</name>
-            <url>http://172.18.134.34:8081/nexus/content/repositories/releases/</url>
+            <url>http://10.4.238.10:8081/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>Snapshots</name>
-            <url>http://172.18.134.34:8081/nexus/content/repositories/snapshots/</url>
+            <url>http://10.4.238.10:8081/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
